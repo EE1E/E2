@@ -40,7 +40,7 @@ void read_matrix(struct matrix *matrixY)
 		}
 	}
 }
-/* a function that takes in a painter to sturcture variable and de-allocates memory fro the matrix*/
+/* a function that takes in a pointer to sturcture variable and de-allocates memory for the matrix*/
 void free_matrix(struct matrix *matrix_Y)
 {
 	int i;
