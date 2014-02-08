@@ -89,12 +89,13 @@ int main(void)
 		}
 		printf("\n");
 	}
-	/*deallocates memory for structure variable*/
+	/*de-allocates memory for structure variable*/
 	free_matrix(&matrixA);
 
 	return 0;
 
 
 }
+
 
 
