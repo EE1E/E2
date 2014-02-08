@@ -91,6 +91,7 @@ int main(void)
 	}
 	/*de-allocates memory for structure variable*/
 	free_matrix(&matrixA);
+	free_matrix(&matrixB);
 
 	return 0;
 
