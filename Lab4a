@@ -1,5 +1,5 @@
-NEEDS A FREE!!
 #include <stdio.h>
+#include <stdlib.h>
 
 /*struct data type of matrices A and B will be of this data type. This struct will contain the dimensions and the matrix data.*/
 struct matrix
@@ -9,7 +9,8 @@ struct matrix
 	float **Data;
 };
 
-
+/*function that takes in a pointer to a structure variable, asks user how many rows and columns are requred*/
+/*and dynamically allocates memory for the matrix*/
 void read_matrix(struct matrix *matrixY)
 {
 	int i,j;
@@ -38,6 +39,16 @@ void read_matrix(struct matrix *matrixY)
 
 		}
 	}
+}
+/* a function that takes in a painter to sturcture variable and de-allocates memory fro the matrix*/
+void free_matrix(struct matrix *matrix_Y)
+{
+	int i;
+	for(i=0;i<matrix_Y->col;i++)
+	{
+		free(matrix_Y->Data[i]);
+	}
+	free(matrix_Y->Data);
 }
 
 int main(void)
@@ -78,6 +89,8 @@ int main(void)
 		}
 		printf("\n");
 	}
+	/*deallocates memory for structure variable*/
+	free_matrix(&matrixA);
 
 	return 0;
 
