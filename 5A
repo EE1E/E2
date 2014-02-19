@@ -1,0 +1,72 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+/* a function that takes in a pointer to structure variable and de-allocates memory for the matrix*/
+void free_matrix(char **matrix)
+{
+	int i;
+	for (i = 0; i < 1000; i++)
+	{
+		free(matrix[i]);
+	}
+	free(matrix);
+}
+
+
+int main(void)
+{
+	//IS THAT OK? about temp_line?
+	char **strmat, temp_line[100];
+	int i = 0, string_size, file;
+	FILE* dict;
+
+	/*opens the file for reading*/
+	dict = fopen("c:\\dict.txt", "r");
+	/*checks if we can open the file, otherwise output error message*/
+	if (dict == NULL)
+	{
+		printf("Could not open dict.txt for reading \n");
+	}
+	else
+	{
+		/*allocates the memory location to the rows or the array of pointers to the columns*/
+		strmat = (char **)malloc(sizeof(char *)* 1000);
+
+		/*allocates the memory location to the rows using a for loop*/
+
+		do
+		{
+			file = fscanf(dict, "%s", temp_line);
+			string_size = strlen(temp_line);
+			strmat[i] = (char *)malloc(sizeof(char)*string_size);
+			strcpy(strmat[i], temp_line);
+
+			i++;
+		} while (file != EOF);
+
+
+		fclose(dict);
+
+		/*print out the contents of the array from 999 to 950*/
+
+		printf("Here is the dict file from line 999 to line 950: \n");
+
+		for (i = 999; i >950; i--)
+		{
+		
+				printf("%s \n", strmat[i]);
+
+			
+		}
+
+		free_matrix(&strmat);
+	}
+
+	return 0;
+
+
+}
+
+
+
