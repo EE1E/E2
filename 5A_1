@@ -22,7 +22,7 @@ int main(void)
 	FILE* dict;
 
 	/*opens the file for reading*/
-	dict = fopen("y:\\dict.txt", "r");
+	dict = fopen("c:\\dict.txt", "r");
 	/*checks if we can open the file, otherwise output error message*/
 	if (dict == NULL)
 	{
