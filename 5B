@@ -40,11 +40,11 @@ char** read_file(char* filename)
 	if(strcmp(filename,"dict")==0)
 	{
 		/*opens the file for reading*/
-		file1 = fopen("y:\\dict.txt", "r");
+		file1 = fopen("c:\\dict.txt", "r");
 	}
 	else
 	{
-		file1 = fopen("y:\\textfile.txt", "r");
+		file1 = fopen("c:\\textfile.txt", "r");
 	}
 
 	//inputtxt = fopen("y:\\inputtxt.txt", "r");
