@@ -1,6 +1,6 @@
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /* a function that takes in a pointer to structure variable and de-allocates memory for the matrix*/
 void free_matrix(char **matrix)
@@ -22,7 +22,7 @@ int main(void)
 	FILE* dict;
 
 	/*opens the file for reading*/
-	dict = fopen("c:\\dict.txt", "r");
+	dict = fopen("y:\\dict.txt", "r");
 	/*checks if we can open the file, otherwise output error message*/
 	if (dict == NULL)
 	{
@@ -31,7 +31,7 @@ int main(void)
 	else
 	{
 		/*allocates the memory location to the rows or the array of pointers to the columns*/
-		strmat = (char **)malloc(sizeof(char *)* 1000);
+		strmat = (char **)malloc(sizeof(char*)*1000);
 
 		/*allocates the memory location to the rows using a for loop*/
 
@@ -60,7 +60,7 @@ int main(void)
 			
 		}
 
-		free_matrix(&strmat);
+		free_matrix(strmat);
 	}
 
 	return 0;
