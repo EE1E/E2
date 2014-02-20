@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -215,7 +214,7 @@ void inverse_matrix(struct matrix *matrix_Y)
 
 int main(void)
 {
-	int i, j, option, exit = 0, first_time = 1;
+	int option, first_time = 1;
 
 	/*instantiates the matrixA and matrixB to a struct data type*/
 	struct matrix matrixA, matrixB;
@@ -288,14 +287,13 @@ int main(void)
 			break;
 		case 6:
 			printf("Exit program\n");
-			exit = 1;
 			break;
 		default:
 			printf("Unknown option!\n\n");
 			break;
 
 		}
-	} while (exit != 1);
+	} while (option != 6);
 
 
 
