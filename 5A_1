@@ -5,7 +5,7 @@
 void free_matrix(char **matrix)
 {
 	int i;
-	for (i = 1000; i >= 0; i--)
+	for (i = 0; i <1000; i++)
 	{
 		free(matrix[i]);
 	}
@@ -15,13 +15,12 @@ void free_matrix(char **matrix)
 
 int main(void)
 {
-	//IS THAT OK? about temp_line?
 	char **strmat, temp_line[100];
 	int i = 0, string_size, file;
 	FILE* dict;
 
 	/*opens the file for reading*/
-	dict = fopen("c:\\dict.txt", "r");
+	dict = fopen("Y:\\dict.txt", "r");
 	/*checks if we can open the file, otherwise output error message*/
 	if (dict == NULL)
 	{
@@ -30,17 +29,20 @@ int main(void)
 	else
 	{
 		/*allocates the memory location to the rows or the array of pointers to the columns*/
-		strmat = (char **)malloc(sizeof(char*)*1001);
+		strmat = (char **)malloc(sizeof(char*)*1000);
 
 		/*allocates the memory location to the rows using a for loop*/
 
 		do
 		{
 			file = fscanf(dict, "%s", temp_line);
-			string_size = strlen(temp_line)+1;
-			strmat[i] = (char *)malloc(sizeof(char)*string_size);
-			strcpy(strmat[i], temp_line);
-			i++;
+			if(file != EOF)
+			{
+				string_size = strlen(temp_line)+1;
+				strmat[i] = (char *)malloc(sizeof(char)*string_size);
+				strcpy(strmat[i], temp_line);
+				i++;
+			}
 		} while (file != EOF);
 
 		fclose(dict);
@@ -50,17 +52,12 @@ int main(void)
 		printf("Here is the dict file from line 999 to line 950: \n");
 
 		for (i = 999; i >949; i--)
-		{		
-				printf("%s \n", strmat[i]);			
+		{
+			printf("%s \n", strmat[i]);
 		}
 
 		free_matrix(strmat);
 	}
-
 	return 0;
-
-
+	
 }
-
-
-
