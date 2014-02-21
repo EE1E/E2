@@ -17,12 +17,12 @@ void lowercase_remove_punct(char *original_string, char *processed_string)
 {
 	int i1, i2;
 	char c;
-	for (i1=0, i2=0; i1<strlen(original_string); i1++)
+	for (i1 = 0, i2 = 0; i1<strlen(original_string); i1++)
 	{
 		c = original_string[i1];
-		if ((c>='A') && (c<='Z'))
+		if ((c >= 'A') && (c <= 'Z'))
 			processed_string[i2++] = original_string[i1] - 'A' + 'a';
-		if (((c>='a') && (c<='z')) || (c=='\''))
+		if (((c >= 'a') && (c <= 'z')) || (c == '\''))
 			processed_string[i2++] = original_string[i1];
 	}
 	processed_string[i2] = '\0';
@@ -35,7 +35,7 @@ char** ReadDict()
 	int i = 0, string_size, file;
 
 	/*opens the file for reading*/
-	dict = fopen("y:\\dict.txt", "r");
+	dict = fopen("c:\\dict.txt", "r");
 	/*checks if we can open the file, otherwise output error message*/
 	if (dict == NULL)
 	{
@@ -44,7 +44,7 @@ char** ReadDict()
 	else
 	{
 		/*allocates the memory location to the rows or the array of pointers to the columns*/
-		strmat = (char **)malloc(sizeof(char*)*1000);
+		strmat = (char **)malloc(sizeof(char*)* 1000);
 
 		/*allocates the memory location to the rows using a for loop*/
 
@@ -52,10 +52,10 @@ char** ReadDict()
 		{
 			/*temp_line is now the contents of the line in the file*/
 			file = fscanf(dict, "%s", temp_line);
-			if(file != EOF)
+			if (file != EOF)
 			{
-				string_size = strlen(temp_line)+1;
-				lowercase_remove_punct(temp_line,temp_line);
+				string_size = strlen(temp_line) + 1;
+				lowercase_remove_punct(temp_line, temp_line);
 				strmat[i] = (char *)malloc(sizeof(char)*string_size);
 				strcpy(strmat[i], temp_line);
 				i++;
@@ -75,26 +75,26 @@ int main(void)
 {
 	char **dictmat;
 	char temp[100];
-	int i = 0,comp, string_size, file,found=0;
-	
+	int i = 0, comp, string_size, file, found = 0;
+
 	FILE* input;
 
-	dictmat=ReadDict();
-	
+	dictmat = ReadDict();
+
 
 
 	/*opens the text file*/
-	input = fopen("y:\\textfile.txt", "r");
+	input = fopen("c:\\textfile.txt", "r");
 
 	/*checks if we can open the file, otherwise output error message*/
 	if (input == NULL)
 	{
-		printf("Could not open dict.txt for reading \n");
+		printf("Could not open textfile.txt for reading \n");
 	}
 	else
 	{
 		/*allocates the memory location to the rows or the array of pointers to the columns*/
-		
+
 
 		/*allocates the memory location to the rows using a for loop*/
 
@@ -102,30 +102,30 @@ int main(void)
 		{
 			/*temp_line is now the contents of the line in the file*/
 			file = fscanf(input, "%s", temp);
-			if(file != EOF)
+			if (file != EOF)
 			{
-				
-				lowercase_remove_punct(temp,temp);
-				for ( i = 0; i < 1000; i++)
+
+				lowercase_remove_punct(temp, temp);
+				for (i = 0; i < 1000; i++)
 				{
-					comp=strcmp(temp,dictmat[i]);
-					if(comp==0)
+					comp = strcmp(temp, dictmat[i]);
+					if (comp == 0)
 					{
-						found=1;
+						found = 1;
 						//printf("%s",temp);
 					}
 
 				}
-
-				if (found==0)
+				
+				if (found == 0)
 				{
-					printf("%s",temp);
+					printf("%s \n", temp);
 				}
+				found = 0;
 
 
-			
 			}
-			
+
 		} while (file != EOF);
 
 		/*closes the file*/
@@ -155,8 +155,8 @@ int main(void)
 	//}
 
 	/*for (i = 0; i <50; i++)
-	{		
-		printf("%s \n", dictmat[i]);
+	{
+	printf("%s \n", dictmat[i]);
 	}*/
 
 
