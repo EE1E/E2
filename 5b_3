@@ -75,7 +75,7 @@ int main(void)
 {
 	char **dictmat, misspelt[1000][100];
 	char temp[100];
-	int i = 0, comp, string_size, file, found = 0, j = 0, foundmiss = 0;
+	int i = 0, comp, file, found = 0, j = 0, foundmiss = 0;
 
 	FILE* input;
 
@@ -118,7 +118,7 @@ int main(void)
 
 				if (found == 0)
 				{
-					foundmiss = 0;
+				
 					/*for loop to go through the misspelt matrix*/
 					for (i = 0; i < 1000; i++)
 					{
@@ -128,21 +128,19 @@ int main(void)
 
 							foundmiss = 1;
 						}
-						
+
 					}
+					/*check if the misspelt word was in the misspelt matrix, if not, prints it out */
 					if (foundmiss != 1)
 					{
 						printf("%s \n", temp);
-						string_size = strlen(temp) + 1;
-						//misspelt[i] = malloc(strlen(temp) + 1);
-						strcpy(misspelt[i], temp);
+						strcpy(misspelt[j], temp);
+						j++;
 					}
-
-
-
-
+					
 				}
 				found = 0;
+				foundmiss = 0;
 
 
 			}
@@ -151,37 +149,11 @@ int main(void)
 
 		/*closes the file*/
 		fclose(input);
+		printf("\n number of unique words: %d \n", j);
 
 	}
 
 	//how to calculate size of matrix for comapring, two for loops, also is it ok to ouptput matrices like that, should I return the line number instead?
-
-
-	/*print out the contents of the array from 999 to 950*/
-
-	//printf("Here are the misspelt words: \n");
-	//for(i = 0; i <50; i++)
-	//{
-	//	for(j = 0; j <1000; j++)
-	//	{
-	//		if(strcmp(dict_strmat[j],input_strmat[i])==0)
-	//			found=1;
-
-
-	//	}
-	//	if (found!=1)
-	//	{
-	//		printf("%s",input_strmat[i]);
-	//	}
-	//}
-
-	/*for (i = 0; i <50; i++)
-	{
-	printf("%s \n", dictmat[i]);
-	}*/
-
-
-
 
 	free_matrix(dictmat);
 
