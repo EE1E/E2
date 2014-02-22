@@ -132,6 +132,6 @@ int main(void)
 		fclose(input);
 
 	}
-	printf("Total %d misspeled words have been found", j-1);
+	printf("Total %d misspeled words have been found\n", j);
 	return 0;
 }
