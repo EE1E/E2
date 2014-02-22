@@ -1,0 +1,163 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* a function that takes in a pointer to structure variable and de-allocates memory for the matrix*/
+void free_matrix(char **strmat)
+{
+	int i;
+	for (i = 0; i < 1000; i++)
+	{
+		free(strmat[i]);
+	}
+	free(strmat);
+}
+
+void lowercase_remove_punct(char *original_string, char *processed_string)
+{
+	int i1, i2;
+	char c;
+	for (i1 = 0, i2 = 0; i1 < strlen(original_string); i1++)
+	{
+		c = original_string[i1];
+		if ((c >= 'A') && (c <= 'Z'))
+			processed_string[i2++] = original_string[i1] - 'A' + 'a';
+		if (((c >= 'a') && (c <= 'z')) || (c == '\''))
+			processed_string[i2++] = original_string[i1];
+	}
+	processed_string[i2] = '\0';
+}
+
+char** ReadDict()
+{
+	FILE* dict;
+	char **strmat, temp_line[100];
+	int i = 0, string_size, file;
+
+	/*opens the file for reading*/
+	dict = fopen("c:\\dict.txt", "r");
+	/*checks if we can open the file, otherwise output error message*/
+	if (dict == NULL)
+	{
+		printf("Could not open dict.txt for reading \n");
+	}
+	else
+	{
+		/*allocates the memory location to the rows or the array of pointers to the columns*/
+		strmat = (char **)malloc(sizeof(char*)* 1000);
+
+		/*allocates the memory location to the rows using a for loop*/
+
+		do
+		{
+			/*temp_line is now the contents of the line in the file*/
+			file = fscanf(dict, "%s", temp_line);
+			if (file != EOF)
+			{
+				string_size = strlen(temp_line) + 1;
+				lowercase_remove_punct(temp_line, temp_line);
+				strmat[i] = (char *)malloc(sizeof(char)*string_size);
+				strcpy(strmat[i], temp_line);
+				i++;
+			}
+
+
+		} while (file != EOF);
+
+		/*closes the file*/
+		fclose(dict);
+
+	}
+	return strmat;
+}
+
+int main(void)
+{
+	char **dictmat, misspelt[1000][100];
+	char temp[100];
+	int i = 0, comp, file, found = 0, j = 0, foundmiss = 0;
+
+	FILE* input;
+
+	dictmat = ReadDict();
+
+
+	/*opens the text file*/
+	input = fopen("c:\\textfile.txt", "r");
+
+	/*checks if we can open the file, otherwise output error message*/
+	if (input == NULL)
+	{
+		printf("Could not open textfile.txt for reading \n");
+	}
+	else
+	{
+		/*allocates the memory location to the rows using a for loop*/
+
+		do
+		{
+			/*temp_line is now the contents of the line in the file*/
+			file = fscanf(input, "%s", temp);
+			if (file != EOF)
+			{
+
+				lowercase_remove_punct(temp, temp);
+				for (i = 0; i < 1000; i++)
+				{
+					comp = strcmp(temp, dictmat[i]);
+					if (comp == 0)
+					{
+						found = 1;
+
+					}
+
+				}
+
+				if (found == 0)
+				{
+				
+					/*for loop to go through the misspelt matrix*/
+					for (i = 0; i <=j; i++)
+					{
+						/*compares the temp with the misspelt, if it is not there, then store it and print it*/
+						if (strcmp(temp, misspelt[i]) == 0)
+						{
+
+							foundmiss = 1;
+						}
+
+					}
+					/*check if the misspelt word was in the misspelt matrix, if not, prints it out */
+					if (foundmiss != 1)
+					{
+						printf("%s \n", temp);
+						strcpy(misspelt[j], temp);
+						j++;
+					}
+					
+				}
+				found = 0;
+				foundmiss = 0;
+
+
+			}
+
+		} while (file != EOF);
+
+		/*closes the file*/
+		fclose(input);
+		printf("number of unique words: %d \n", j);
+
+	}
+
+
+	free_matrix(dictmat);
+
+
+	return 0;
+
+
+}
+
+
+
