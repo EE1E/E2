@@ -28,6 +28,7 @@ void lowercase_remove_punct(char *original_string, char *processed_string)
 	processed_string[i2] = '\0';
 }
 
+
 char** ReadDict()
 {
 	FILE* dict;
@@ -69,6 +70,27 @@ char** ReadDict()
 
 	}
 	return strmat;
+}
+
+
+/*checks for a difference of one letter*/
+void one_let(char *temp)
+{
+	char **dictmat;
+
+	int i = 0;
+
+	dictmat = ReadDict();
+
+
+	for (i = 0; i < 1000; i++)
+	{
+		if(strlen(temp)==strlen(dictmat[i]))
+		{
+			printf("  %s",dictmat[i]);
+		}
+	}
+
 }
 
 int main(void)
@@ -117,9 +139,12 @@ int main(void)
 				/*it has not found a word in the dictionay, so the word must be misspelt*/
 				if (found == 0 && (strcmp(temp, "") !=0))
 				{
-				
+
 					/*temp is the variable that is misspelt*/
-					printf("%s \n",temp);
+					printf("\n%s \n",temp);
+
+					/*checks for a difference of one letter*/
+					one_let(temp);
 				}
 				found = 0;
 				foundmiss = 0;
@@ -131,7 +156,7 @@ int main(void)
 
 		/*closes the file*/
 		fclose(input);
-		
+
 
 	}
 
