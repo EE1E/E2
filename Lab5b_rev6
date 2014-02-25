@@ -29,8 +29,7 @@ void lowercase_remove_punct(char *original_string, char *processed_string)
 }
 struct misspelled_words
 {
-	int rows;
-	int col;
+	int number_misspelled;
 	char** misspelled;
 };
 
@@ -76,7 +75,7 @@ char** ReadDict()
 	}
 	return strmat;
 }
-void find_misspeled(struct misspelled_words *misspelled)
+void find_misspelled(struct misspelled_words *misspelled)
 {
 	char **dictmat, **misspelled_temp; 
 	char temp[100];
@@ -130,7 +129,7 @@ void find_misspeled(struct misspelled_words *misspelled)
 								misspelled_number++;
 								j++;
 								misspelled->misspelled = (char **)malloc(sizeof(char*)*misspelled_number);
-								for (i=0;i<=misspelled_number;i++)
+								for (i=0;i<misspelled_number;i++)
 									misspelled->misspelled[i] = (char *)malloc(sizeof(char)*(strlen(misspelled_temp[j])+1));
 
 							}
@@ -142,7 +141,7 @@ void find_misspeled(struct misspelled_words *misspelled)
 		free_matrix(misspelled_temp, 1000);
 		fclose(input);
 		printf("Total %d misspeled words have been found\n", misspelled_number);
-
+		misspelled->number_misspelled = misspelled_number;
 		input = fopen("D:\\Users\\Roman\\Documents\\Visual Studio\\Lab5A\\ee1e2_lab5_additional_files\\ee1e2_lab5_additional_files\\textfile.txt", "r");
 		j=0;
 		do
@@ -185,16 +184,15 @@ void find_misspeled(struct misspelled_words *misspelled)
 		fclose(input);
 
 	}
-	printf("Total %d misspeled words have been found\n", j);
-	//free_matrix(misspelled->misspelled, 338);
+	free_matrix(misspelled->misspelled, misspelled_number);
 }
 
 int main(void)
 {
-	struct misspelled_words misspeld_found;
+	struct misspelled_words misspelld_found;
 	
-	find_misspeled(&misspeld_found);
-	printf("%s\n", misspeld_found.misspelled[20]);
+	find_misspelled(&misspelld_found);
+	printf("Total %d misspelled words have been found\n", misspelld_found.number_misspelled);
 
 	return 0;
 }
