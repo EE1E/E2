@@ -87,6 +87,7 @@ void one_let(char *temp)
 	{
 		if(strlen(temp)==strlen(dictmat[i]))
 		{
+
 			printf("  %s",dictmat[i]);
 		}
 	}
@@ -139,12 +140,12 @@ int main(void)
 				/*it has not found a word in the dictionay, so the word must be misspelt*/
 				if (found == 0 && (strcmp(temp, "") !=0))
 				{
-
+					
 					/*temp is the variable that is misspelt*/
-					printf("\n%s \n",temp);
+					printf("\n%c \n",temp[0]);
 
 					/*checks for a difference of one letter*/
-					one_let(temp);
+					//one_let(temp);
 				}
 				found = 0;
 				foundmiss = 0;
