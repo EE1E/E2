@@ -117,7 +117,7 @@ void last_two(char  *temp)
 		{
 			/*makes sure that the strings are the same before the last two letters, then checks if the last two letters are swapped and prints out the suggestion*/
 			if (strncmp(temp, dictmat[i], strlen(dictmat[i]) - 2) == 0)
-				if (temp[strlen(temp)-1] == dictmat[i][strlen(temp) ])
+				if (temp[strlen(temp)-1] == dictmat[i][strlen(temp) -2])
 					if (temp[strlen(temp)-2] == dictmat[i][strlen(temp)-1])
 						printf("%s ", dictmat[i]);
 		}
