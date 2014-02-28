@@ -1,0 +1,256 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/*struct data type of matrices A and B will be of this data type. This struct will contain the dimensions and the matrix data.*/
+struct matrix
+{
+	int rows;
+	int col;
+	float **Data;
+};
+
+/*function that takes in a pointer to a structure variable, asks user how many rows and columns are required*/
+/*and dynamically allocates memory for the matrix*/
+void read_matrix(struct matrix *matrixY)
+{
+	int i, j;
+	printf("Number of rows: ");
+	scanf("%d", &matrixY->rows);
+	printf("Number of columns: ");
+	scanf("%d", &matrixY->col);
+
+	/*allocates the memory location to the rows or the array of pointers to the columns*/
+	matrixY->Data = (float **)malloc(sizeof(float *)*matrixY->rows);
+
+	/*allocates the memory location to the columns using a for loop*/
+	for (i = 0; i < matrixY->rows; i++)
+	{
+		matrixY->Data[i] = (float *)malloc(sizeof(float)*matrixY->col);
+	}
+
+	printf("Enter matrix data: \n");
+	for (i = 0; i < matrixY->rows; i++)
+	{
+		for (j = 0; j < matrixY->col; j++)
+		{
+			scanf("%f", &matrixY->Data[i][j]);
+		}
+	}
+}
+
+/* a function that takes in a pointer to structure variable and de-allocates memory for the matrix*/
+void free_matrix(struct matrix *matrix_Y)
+{
+	int i;
+	for (i = 0; i < matrix_Y->rows; i++)
+	{
+		free(matrix_Y->Data[i]);
+	}
+	free(matrix_Y->Data);
+}
+/*a function that takes in pointers to matrix structures and adds matrices stored in an array "Data" defined inside structure*/
+void add_matrix(struct matrix *matrix_Y, struct matrix *matrix_Z)
+{
+	int i, j;
+
+	/*Checks if dimensions are equal*/
+	if (matrix_Y->col == matrix_Z->col && matrix_Y->rows == matrix_Z->rows)
+	{
+	/* for loops performing addition element by element*/
+		for (i = 0; i < matrix_Y->rows; i++)
+		{
+			for (j = 0; j < matrix_Y->col; j++)
+			{
+				printf("%.1f ", (matrix_Y->Data[i][j] + matrix_Z->Data[i][j]));
+			}
+			printf("\n");
+		}
+	}
+	else
+		printf("Error: Invalid matrix dimensions \n");
+}
+/*a function that takes in pointers to matrix structures and substracts matrices stored in an array "Data" defined inside structure*/
+void substract_matrix(struct matrix *matrix_Y, struct matrix *matrix_Z)
+{
+	int i, j;
+
+	/*Checks if dimensions are equal*/
+	if (matrix_Y->col == matrix_Z->col && matrix_Y->rows == matrix_Z->rows)
+	{
+		printf("A-B = \n");
+		/*for loops performing substraction element by element*/
+		for (i = 0; i < matrix_Y->rows; i++)
+		{
+			for (j = 0; j < matrix_Y->col; j++)
+			{
+				printf("%.1f ", (matrix_Y->Data[i][j] - matrix_Z->Data[i][j]));
+			}
+			printf("\n");
+
+		}
+	}
+	else
+		printf("Error: Invalid matrix dimensions \n");
+}
+
+/*a function that takes in pointers to matrix structures and multiplies matrices stored in an array "Data" defined inside structure*/
+void multiply_matrices(struct matrix *matrix_A, struct matrix *matrix_B)
+{
+	int i, j, k;
+	float sum;
+	struct matrix matrix_Y;
+	/* checks if number of coloumns in first matrix is same as number of rows in second matrix*/
+	if (matrix_A->col == matrix_B->rows)
+	{
+		matrix_Y.rows = matrix_A->rows;
+		matrix_Y.col = matrix_B->col;
+		/*allocates the memory location to the rows or the array of pointers to the collumns*/
+		matrix_Y.Data=(float **)malloc(sizeof(float *)*matrix_Y.rows);
+		/*allocates the memory location to the columns using a for loop*/
+		for(i=0;i<matrix_Y.rows;i++)
+		{
+			matrix_Y.Data[i]=(float *)malloc(sizeof(float)*matrix_Y.col);
+		}
+		/* initialises all elements to 0*/
+		for ( i = 0; i <matrix_Y.rows; ++i)
+		{
+			for(j=0;j<matrix_Y.col;++j)
+				matrix_Y.Data[i][j]=0;
+		}
+		/*three neseted for loops that perform the multiplication element by element and print out the resultant matrix*/
+		for ( i = 0; i <matrix_Y.rows; ++i)
+		{
+			for(j=0;j<matrix_Y.col;++j)
+			{
+				for(k=0; k<matrix_B->rows; ++k)
+				{
+					matrix_Y.Data[i][j]+=(matrix_A->Data[i][k])*(matrix_B->Data[k][j]);
+				}
+				printf("%.1f ",matrix_Y.Data[i][j]);
+			}
+			printf("\n");
+		}
+		free_matrix(&matrix_Y);
+	}
+	else
+	{
+		printf("Error: Invalid matrix dimensions \n");
+	}
+}
+
+/* a function that takes in a pointer to a structure variable, and outputs inverse of a matrix strored in the "Data" variable inside the structure*/
+void inverse_matrix(struct matrix *matrix_Y)
+{
+	int i, j;
+	float det = 0, temp[2][2];
+
+	/*matrix must be 2x2*/
+	if ((matrix_Y->col == 2) && (matrix_Y->rows == 2))
+	{
+		/*finds the determinant of the matrix*/
+		det = (matrix_Y->Data[0][0] * matrix_Y->Data[1][1]) - (matrix_Y->Data[0][1] * matrix_Y->Data[1][0]);
+
+		/*copies matrix A into a temp matrix to allow its contents to be swapped to find the inverse*/
+		for (i = 0; i < 2; i++)
+		{
+			for (j = 0; j < 2; j++)
+			{
+				temp[i][j] = matrix_Y->Data[i][j];
+			}
+		}
+
+		/*swapping the diagonals and putting negatives for the other diagonal*/
+		matrix_Y->Data[0][0] = temp[1][1] / det;
+		matrix_Y->Data[1][1] = temp[0][0] / det;
+		matrix_Y->Data[0][1] = -1 * temp[0][1] / det;
+		matrix_Y->Data[1][0] = -1 * temp[1][0] / det;
+
+		printf("Inverse of A = \n");
+		for (i = 0; i < matrix_Y->rows; i++)
+		{
+			for (j = 0; j < matrix_Y->col; j++)
+			{
+				printf("%.5f ", matrix_Y->Data[i][j]);
+			}
+			printf("\n");
+		}
+	}
+	else
+		printf("Inverse of A is invalid for a %dx%d matrix \n", matrix_Y->rows, matrix_Y->col);
+
+}
+
+int main(void)
+{
+	int option, first_time = 1;
+
+	/*instantiates the matrixA and matrixB to a struct data type*/
+	struct matrix matrixA, matrixB;
+
+	/*Runs this loop until user want to exit*/
+	do
+	{
+		/*displays menu of options,*/
+
+		printf("\n 1 - Enter matrices A&B \n 2 - Add matrices \n 3 - Subtract matrices \n 4 - Multiply matrices \n 5 - Inverse of A \n 6 - Quit program \n");
+
+		printf(" \nOption: ");
+		scanf("%d", &option);
+		/* switch-case tree that calls a particular function/functions depending on user input*/
+		switch (option)
+		{
+		case 1:
+			/*checks if the case was called for the first time and de-allocates memory for structure variable if this is not the first time*/
+			if (first_time != 1)
+			{
+				free_matrix(&matrixA);
+				free_matrix(&matrixB);
+			}
+			printf("This is matrix A \n");
+			read_matrix(&matrixA);
+
+			printf("\nThis is matrix B \n");
+			read_matrix(&matrixB);
+
+			first_time = 0;
+			break;
+		case 2:
+			if (first_time == 0)
+				add_matrix(&matrixA, &matrixB);
+			else
+				printf("Please enter matrices first! \n");
+
+			break;
+		case 3:
+			if (first_time == 0)
+				substract_matrix(&matrixA, &matrixB);
+			else
+				printf("Please enter matrices first! \n");
+
+			break;
+		case 4:
+			if (first_time == 0)
+				multiply_matrices(&matrixA, &matrixB);
+			else
+				printf("Please enter matrices first! \n");
+
+			break;
+		case 5:
+			if (first_time == 0)
+				inverse_matrix(&matrixA);
+			else
+				printf("Please enter matrices first! \n");
+
+			break;
+		case 6:
+			printf("Exit program\n");
+			break;
+		default:
+			printf("Unknown option!\n\n");
+			break;
+
+		}
+	} while (option != 6);
+
+	return 0;
+}
