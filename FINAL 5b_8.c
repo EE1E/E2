@@ -13,6 +13,7 @@ void free_matrix(char **strmat)
 	free(strmat);
 }
 
+/*removes all of punctuatiion letters and removes capital letters*/
 void lowercase_remove_punct(char *original_string, char *processed_string)
 {
 	int i1, i2;
@@ -28,7 +29,7 @@ void lowercase_remove_punct(char *original_string, char *processed_string)
 	processed_string[i2] = '\0';
 }
 
-
+/*reads the dictionary and returns an array will all of the words in the diictionary*/
 char** ReadDict()
 {
 	FILE* dict;
@@ -36,7 +37,7 @@ char** ReadDict()
 	int i = 0, string_size, file;
 
 	/*opens the file for reading*/
-	dict = fopen("c:\\dict.txt", "r");
+	dict = fopen("y:\\dict.txt", "r");
 	/*checks if we can open the file, otherwise output error message*/
 	if (dict == NULL)
 	{
@@ -154,7 +155,7 @@ int main(void)
 
 
 	/*opens the text file*/
-	input = fopen("c:\\textfile.txt", "r");
+	input = fopen("y:\\textfile.txt", "r");
 
 	/*checks if we can open the file, otherwise output error message*/
 	if (input == NULL)
