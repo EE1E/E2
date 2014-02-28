@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*frees the matrix*/
 void free_matrix(char **matrix)
 {
 	int i;
@@ -35,16 +36,22 @@ int main(void)
 
 		do
 		{
+			/*opens the file and temp_line will stored as each word in the dictionary*/
 			file = fscanf(dict, "%s", temp_line);
+			/*makes sure that we have not reached the end of the file*/
 			if(file != EOF)
 			{
+				/*set the string size to include the null terminator*/
 				string_size = strlen(temp_line)+1;
+				/*allocates the array to the size of the string incuding the null terminator*/
 				strmat[i] = (char *)malloc(sizeof(char)*string_size);
+				/*copies the string into the array*/
 				strcpy(strmat[i], temp_line);
 				i++;
 			}
 		} while (file != EOF);
 
+		/*close the file*/
 		fclose(dict);
 
 		/*print out the contents of the array from 999 to 950*/
@@ -56,6 +63,7 @@ int main(void)
 			printf("%s \n", strmat[i]);
 		}
 
+		/*frees the array*/
 		free_matrix(strmat);
 	}
 	return 0;
