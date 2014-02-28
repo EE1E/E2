@@ -13,7 +13,7 @@ void free_matrix(char **strmat)
 	free(strmat);
 }
 
-/*removes all of punctuatiion letters and removes capital letters*/
+/*removes all of punctuation letters and removes capital letters*/
 void lowercase_remove_punct(char *original_string, char *processed_string)
 {
 	int i1, i2;
@@ -29,59 +29,12 @@ void lowercase_remove_punct(char *original_string, char *processed_string)
 	processed_string[i2] = '\0';
 }
 
-/*reads the dictionary and returns an array will all of the words in the diictionary*/
-char** ReadDict()
-{
-	FILE* dict;
-	char **strmat, temp_line[100];
-	int i = 0, string_size, file;
-
-	/*opens the file for reading*/
-	dict = fopen("y:\\dict.txt", "r");
-	/*checks if we can open the file, otherwise output error message*/
-	if (dict == NULL)
-	{
-		printf("Could not open dict.txt for reading \n");
-	}
-	else
-	{
-		/*allocates the memory location to the rows or the array of pointers to the columns*/
-		strmat = (char **)malloc(sizeof(char*)* 1000);
-
-		/*allocates the memory location to the rows using a for loop*/
-
-		do
-		{
-			/*temp_line is now the contents of the line in the file*/
-			file = fscanf(dict, "%s", temp_line);
-			if (file != EOF)
-			{
-				string_size = strlen(temp_line) + 1;
-				lowercase_remove_punct(temp_line, temp_line);
-				strmat[i] = (char *)malloc(sizeof(char)*string_size);
-				strcpy(strmat[i], temp_line);
-				i++;
-			}
-
-
-		} while (file != EOF);
-
-		/*closes the file*/
-		fclose(dict);
-
-	}
-	return strmat;
-}
-
-
 /*checks for a difference of one letter*/
-void one_let(char *temp)
+void one_let(char *temp, char **dictmat)
 {
-	char **dictmat;
 
 	int i = 0, j, correct = 0;
 
-	dictmat = ReadDict();
 	printf("Similar: ");
 
 	for (i = 0; i < 1000; i++)
@@ -89,14 +42,15 @@ void one_let(char *temp)
 		/*the words are the same size*/
 		if (strlen(temp) == strlen(dictmat[i]))
 		{
+			/*if the character in both words is the same, it increments the variable correct*/
 			for (j = 0; j < strlen(temp); j++)
 				if (temp[j] == dictmat[i][j])
-					correct += 1;
+					correct++;
 
 
 			/*only differers by one letter*/
 			if (correct == (strlen(temp) - 1))
-				printf("%s ",  dictmat[i]);
+				printf("%s ", dictmat[i]);
 
 			/*reset the correct variable*/
 			correct = 0;
@@ -106,11 +60,9 @@ void one_let(char *temp)
 }
 
 
-void last_two(char  *temp)
+void last_two(char  *temp, char **dictmat)
 {
-	char **dictmat;
 	int i;
-	dictmat = ReadDict();
 
 	for (i = 0; i < 1000; i++)
 	{
@@ -126,33 +78,71 @@ void last_two(char  *temp)
 	}
 }
 
-void last_let(char *temp)
+void last_let(char *temp, char **dictmat)
 {
-	char **dictmat,word[100];
+	char word[100];
 	int i;
-	dictmat = ReadDict();
 
+	/*copies the temp variable into the word variable except for the last letter, then inserts a null character*/
 	strncpy(word, temp, strlen(temp) - 1);
 	word[strlen(temp) - 1] = '\0';
-	
+
+	/*checks if the word excluding the last letter is available in the dictionary*/
 	for (i = 0; i < 1000; i++)
 		if (strcmp(word, dictmat[i]) == 0)
 			printf("%s ", dictmat[i]);
 
 
-	
+
 }
 
 int main(void)
 {
-	char **dictmat;
 	char temp[100];
+	char **strmat, temp_line[100];
+	int string_size;
 	int i = 0, comp, file, found = 0, j = 0, foundmiss = 0;
 
 	FILE* input;
+	FILE* dict;
 
-	dictmat = ReadDict();
+	/*opens the dictionary file and stores it into "strmat" array of strings*/
+	dict = fopen("y:\\dict.txt", "r");
+	/*checks if we can open the file, otherwise output error message*/
+	if (dict == NULL)
+	{
+		printf("Could not open dict.txt for reading \n");
+	}
+	else
+	{
+		/*allocates the memory location to the rows or the array of pointers to the columns*/
+		strmat = (char **)malloc(sizeof(char*)* 1000);
 
+		
+		do
+		{
+			/*temp_line is now the contents of the line in the file*/
+			file = fscanf(dict, "%s", temp_line);
+			/*makes sure does not go to the end of file*/
+			if (file != EOF)
+			{
+				/*set the string size to include the null terminator*/
+				string_size = strlen(temp_line) + 1;
+				/*allocates the array to the size of the string including the null terminator*/
+				lowercase_remove_punct(temp_line, temp_line);
+				strmat[i] = (char *)malloc(sizeof(char)*string_size);
+				/*copies the string into the array*/
+				strcpy(strmat[i], temp_line);
+				i++;
+			}
+
+
+		} while (file != EOF);
+
+		/*closes the file*/
+		fclose(dict);
+
+	}
 
 	/*opens the text file*/
 	input = fopen("y:\\textfile.txt", "r");
@@ -172,11 +162,11 @@ int main(void)
 			file = fscanf(input, "%s", temp);
 			if (file != EOF)
 			{
-
+				/*remove punctuation*/
 				lowercase_remove_punct(temp, temp);
 				for (i = 0; i < 1000; i++)
 				{
-					comp = strcmp(temp, dictmat[i]);
+					comp = strcmp(temp, strmat[i]);
 					if (comp == 0)
 					{
 						/*it has found the word in the dictionary*/
@@ -191,14 +181,14 @@ int main(void)
 				{
 
 					/*temp is the variable that is misspelt*/
-					printf("\nMisspelled: %s \n",temp);
+					printf("\nMisspelled: %s \n", temp);
 
 					/*checks for a difference of one letter*/
-					one_let(temp);
+					one_let(temp, strmat);
 					/*checks if the last two letters have been swapped*/
-					last_two(temp);
+					last_two(temp, strmat);
 					/*checks if last letter is missing*/
-					last_let(temp);
+					last_let(temp, strmat);
 				}
 				found = 0;
 				foundmiss = 0;
@@ -213,14 +203,8 @@ int main(void)
 
 
 	}
-
-
-	free_matrix(dictmat);
-
+	/*frees the array*/
+	free_matrix(strmat);
 
 	return 0;
-
-
 }
-
-
