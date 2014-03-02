@@ -99,14 +99,15 @@ void multiply_matrices(struct matrix *matrix_A, struct matrix *matrix_B)
 	int i, j, k;
 	float sum;
 	struct matrix matrix_Y;
+
 	/* checks if number of coloumns in first matrix is same as number of rows in second matrix*/
 	if (matrix_A->col == matrix_B->rows)
 	{
 		matrix_Y.rows = matrix_A->rows;
 		matrix_Y.col = matrix_B->col;
-		/*allocates the memory location to the rows or the array of pointers to the collumns*/
+		/*allocates the memory for all rows or the array of pointers to the collumns*/
 		matrix_Y.Data=(float **)malloc(sizeof(float *)*matrix_Y.rows);
-		/*allocates the memory location to the columns using a for loop*/
+		/*allocates the memory location to each row using a for loop*/
 		for(i=0;i<matrix_Y.rows;i++)
 		{
 			matrix_Y.Data[i]=(float *)malloc(sizeof(float)*matrix_Y.col);
@@ -139,44 +140,62 @@ void multiply_matrices(struct matrix *matrix_A, struct matrix *matrix_B)
 }
 
 /* a function that takes in a pointer to a structure variable, and outputs inverse of a matrix strored in the "Data" variable inside the structure*/
-void inverse_matrix(struct matrix *matrix_Y)
+void inverse_matrix(struct matrix *matrix_A)
 {
 	int i, j;
 	float det = 0, temp[2][2];
+	struct matrix matrix_Y;
 
-	/*matrix must be 2x2*/
-	if ((matrix_Y->col == 2) && (matrix_Y->rows == 2))
+	/*checks if input matrix is 2x2*/
+	if ((matrix_A->col == 2) && (matrix_A->rows == 2))
 	{
-		/*finds the determinant of the matrix*/
-		det = (matrix_Y->Data[0][0] * matrix_Y->Data[1][1]) - (matrix_Y->Data[0][1] * matrix_Y->Data[1][0]);
+		matrix_Y.rows = matrix_A->rows;
+		matrix_Y.col = matrix_A->col;
+		/*allocates the memory location to the rows or the array of pointers to the collumns*/
+		matrix_Y.Data=(float **)malloc(sizeof(float *)*matrix_Y.rows);
+		/*allocates the memory location to the columns using a for loop*/
+		for(i=0;i<matrix_Y.rows;i++)
+		{
+			matrix_Y.Data[i]=(float *)malloc(sizeof(float)*matrix_Y.col);
+		}
+		/* copies "Data" from input structure "matrix_A" to temporary structure "matrix_Y"*/
+		for ( i = 0; i <matrix_Y.rows; ++i)
+		{
+			for(j=0;j<matrix_Y.col;++j)
+				matrix_Y.Data[i][j]=matrix_A->Data[i][j];
+		}
 
-		/*copies matrix A into a temp matrix to allow its contents to be swapped to find the inverse*/
+		/*finds the determinant of the matrix*/
+		det = (matrix_Y.Data[0][0] * matrix_Y.Data[1][1]) - (matrix_Y.Data[0][1] * matrix_Y.Data[1][0]);
+
+		/*copies "Data" matrix into a temp matrix to allow its contents to be swapped to find the inverse*/
 		for (i = 0; i < 2; i++)
 		{
 			for (j = 0; j < 2; j++)
 			{
-				temp[i][j] = matrix_Y->Data[i][j];
+				temp[i][j] = matrix_Y.Data[i][j];
 			}
 		}
 
 		/*swapping the diagonals and putting negatives for the other diagonal*/
-		matrix_Y->Data[0][0] = temp[1][1] / det;
-		matrix_Y->Data[1][1] = temp[0][0] / det;
-		matrix_Y->Data[0][1] = -1 * temp[0][1] / det;
-		matrix_Y->Data[1][0] = -1 * temp[1][0] / det;
+		matrix_Y.Data[0][0] = temp[1][1] / det;
+		matrix_Y.Data[1][1] = temp[0][0] / det;
+		matrix_Y.Data[0][1] = -1 * temp[0][1] / det;
+		matrix_Y.Data[1][0] = -1 * temp[1][0] / det;
 
 		printf("Inverse of A = \n");
-		for (i = 0; i < matrix_Y->rows; i++)
+		for (i = 0; i < matrix_Y.rows; i++)
 		{
-			for (j = 0; j < matrix_Y->col; j++)
+			for (j = 0; j < matrix_Y.col; j++)
 			{
-				printf("%.5f ", matrix_Y->Data[i][j]);
+				printf("%.5f ", matrix_Y.Data[i][j]);
 			}
 			printf("\n");
 		}
+		free_matrix(&matrix_Y);
 	}
 	else
-		printf("Inverse of A is invalid for a %dx%d matrix \n", matrix_Y->rows, matrix_Y->col);
+		printf("Inverse of A is invalid for a %dx%d matrix \n", matrix_A->rows, matrix_A->col);
 
 }
 
@@ -215,6 +234,7 @@ int main(void)
 			first_time = 0;
 			break;
 		case 2:
+			/* performs addition if case was called by calling a funciton "add_matrix" with pointers to matrixA and matrixB as two arguments to the function*/
 			if (first_time == 0)
 				add_matrix(&matrixA, &matrixB);
 			else
@@ -222,6 +242,7 @@ int main(void)
 
 			break;
 		case 3:
+			/* performs substraction if case was called by calling a funciton "substract_matrix" with pointers to matrixA and matrixB as two arguments to the function*/
 			if (first_time == 0)
 				substract_matrix(&matrixA, &matrixB);
 			else
@@ -229,6 +250,7 @@ int main(void)
 
 			break;
 		case 4:
+			/* performs multiplication if case was called by calling a funciton "multiply_matrices" with pointers to matrixA and matrixB as two arguments to the function*/
 			if (first_time == 0)
 				multiply_matrices(&matrixA, &matrixB);
 			else
@@ -236,6 +258,7 @@ int main(void)
 
 			break;
 		case 5:
+			/* performs inversion if case was called by calling a funciton "inverse_matrix" with pointer to matrixA as an argument to the function*/
 			if (first_time == 0)
 				inverse_matrix(&matrixA);
 			else
@@ -243,6 +266,7 @@ int main(void)
 
 			break;
 		case 6:
+			/*exits the program*/
 			printf("Exit program\n");
 			break;
 		default:
