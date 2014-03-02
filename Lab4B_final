@@ -70,7 +70,7 @@ void add_matrix(struct matrix *matrix_Y, struct matrix *matrix_Z)
 		printf("Error: Invalid matrix dimensions \n");
 }
 /*a function that takes in pointers to matrix structures and substracts matrices stored in an array "Data" defined inside structure*/
-void substract_matrix(struct matrix *matrix_Y, struct matrix *matrix_Z)
+void subtract_matrix(struct matrix *matrix_Y, struct matrix *matrix_Z)
 {
 	int i, j;
 
@@ -78,7 +78,7 @@ void substract_matrix(struct matrix *matrix_Y, struct matrix *matrix_Z)
 	if (matrix_Y->col == matrix_Z->col && matrix_Y->rows == matrix_Z->rows)
 	{
 		printf("A-B = \n");
-		/*for loops performing substraction element by element*/
+		/*for loops performing subtraction element by element*/
 		for (i = 0; i < matrix_Y->rows; i++)
 		{
 			for (j = 0; j < matrix_Y->col; j++)
@@ -100,7 +100,7 @@ void multiply_matrices(struct matrix *matrix_A, struct matrix *matrix_B)
 	float sum;
 	struct matrix matrix_Y;
 
-	/* checks if number of coloumns in first matrix is same as number of rows in second matrix*/
+	/* checks if number of columns in first matrix is same as number of rows in second matrix*/
 	if (matrix_A->col == matrix_B->rows)
 	{
 		matrix_Y.rows = matrix_A->rows;
@@ -118,7 +118,7 @@ void multiply_matrices(struct matrix *matrix_A, struct matrix *matrix_B)
 			for(j=0;j<matrix_Y.col;++j)
 				matrix_Y.Data[i][j]=0;
 		}
-		/*three neseted for loops that perform the multiplication element by element and print out the resultant matrix*/
+		/*three nested for loops that perform the multiplication element by element and print out the resultant matrix*/
 		for ( i = 0; i <matrix_Y.rows; ++i)
 		{
 			for(j=0;j<matrix_Y.col;++j)
@@ -151,7 +151,7 @@ void inverse_matrix(struct matrix *matrix_A)
 	{
 		matrix_Y.rows = matrix_A->rows;
 		matrix_Y.col = matrix_A->col;
-		/*allocates the memory location to the rows or the array of pointers to the collumns*/
+		/*allocates the memory location to the rows or the array of pointers to the columns*/
 		matrix_Y.Data=(float **)malloc(sizeof(float *)*matrix_Y.rows);
 		/*allocates the memory location to the columns using a for loop*/
 		for(i=0;i<matrix_Y.rows;i++)
@@ -234,7 +234,7 @@ int main(void)
 			first_time = 0;
 			break;
 		case 2:
-			/* performs addition if case was called by calling a funciton "add_matrix" with pointers to matrixA and matrixB as two arguments to the function*/
+			/* performs addition if case was called by calling a function "add_matrix" with pointers to matrixA and matrixB as two arguments to the function*/
 			if (first_time == 0)
 				add_matrix(&matrixA, &matrixB);
 			else
@@ -242,15 +242,15 @@ int main(void)
 
 			break;
 		case 3:
-			/* performs substraction if case was called by calling a funciton "substract_matrix" with pointers to matrixA and matrixB as two arguments to the function*/
+			/* performs subtraction if case was called by calling a function "substract_matrix" with pointers to matrixA and matrixB as two arguments to the function*/
 			if (first_time == 0)
-				substract_matrix(&matrixA, &matrixB);
+				subtract_matrix(&matrixA, &matrixB);
 			else
 				printf("Please enter matrices first! \n");
 
 			break;
 		case 4:
-			/* performs multiplication if case was called by calling a funciton "multiply_matrices" with pointers to matrixA and matrixB as two arguments to the function*/
+			/* performs multiplication if case was called by calling a function "multiply_matrices" with pointers to matrixA and matrixB as two arguments to the function*/
 			if (first_time == 0)
 				multiply_matrices(&matrixA, &matrixB);
 			else
@@ -258,7 +258,7 @@ int main(void)
 
 			break;
 		case 5:
-			/* performs inversion if case was called by calling a funciton "inverse_matrix" with pointer to matrixA as an argument to the function*/
+			/* performs inversion if case was called by calling a function "inverse_matrix" with pointer to matrixA as an argument to the function*/
 			if (first_time == 0)
 				inverse_matrix(&matrixA);
 			else
