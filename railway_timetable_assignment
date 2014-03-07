@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+struct data
+{
+	char* station;
+	char *destination;
+	int departure;
+	int arrival;
+	struct data *next;
+};
+struct data* append_node(struct data** head, struct data* node_pointer)
+{
+	struct data* temp;
+
+	if (*head == NULL)
+		*head = node_pointer;
+	else
+	{
+		for(temp=*head;temp->next!=NULL; temp=temp->next);
+		temp->next=node_pointer;
+	}
+	return node_pointer;
+}
+void display_list(struct data* head)
+{
+	struct data* temp;
+
+		for(temp=head; temp!=NULL; temp=temp->next)
+			printf("Data element is %s\n", temp->station);
+
+}
+
+int main(void)
+{
+	int i, file, time_depature, time_arrival;
+	char temp_str, temp_station[20], temp_destination[20];
+	struct data* current;
+	struct data* head=NULL;
+	FILE* input;
+
+	input = fopen("c:\\times.txt", "r");
+	if (input == NULL)
+	{
+		printf("Could not open dict.txt for reading \n");
+	}
+	else
+	{
+		/*allocates the memory location to the rows or the array of pointers to the columns*/
+		
+		do
+		{
+			/*temp_line is now the contents of the line in the file*/
+			file = fscanf(input, "%s", temp_station);
+			file = fscanf(input, "%s", temp_destination);
+			file = fscanf(input, "%d", &time_depature);
+			file = fscanf(input, "%d", &time_arrival);
+			/*makes sure does not go to the end of file*/
+			if (file != EOF)
+			{
+				current = (struct data*)malloc(sizeof(struct data));
+					if (current)
+					{
+						current->station = (char*)malloc(sizeof(char)*(sizeof(temp_station)+1));
+						current->destination = (char*)malloc(sizeof(char)*(sizeof(temp_destination)+1));
+						strcpy(current->station, temp_station);
+						strcpy(current->destination, temp_destination);
+						current->departure = time_depature;
+						current->arrival = time_arrival;
+					}
+					append_node(&head, current);
+
+			}
+
+
+		} while (file != EOF);
+
+		/*closes the file*/
+		fclose(input);
+
+	}
+
+	display_list(head);
+
+	return 0;
+}
