@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 struct data
 {
@@ -27,9 +28,18 @@ void display_list(struct data* head)
 {
 	struct data* temp;
 
-		for(temp=head; temp!=NULL; temp=temp->next)
-			printf("Data element is %s\n", temp->station);
+	for(temp=head; temp!=NULL; temp=temp->next)
+		printf("Data element is %s %s %d %d\n", temp->station, temp->destination, temp->departure, temp->arrival);
 
+}
+int convert_time(int raw_time)
+{
+	float temp;
+	int mins;
+
+	temp = raw_time;
+	mins = floor( temp /100)*60 + (temp/100 - floor(temp/100))*100;
+	return mins;	
 }
 
 int main(void)
@@ -40,7 +50,7 @@ int main(void)
 	struct data* head=NULL;
 	FILE* input;
 
-	input = fopen("c:\\times.txt", "r");
+	input = fopen("y:\\times.txt", "r");
 	if (input == NULL)
 	{
 		printf("Could not open dict.txt for reading \n");
@@ -48,7 +58,7 @@ int main(void)
 	else
 	{
 		/*allocates the memory location to the rows or the array of pointers to the columns*/
-		
+
 		do
 		{
 			/*temp_line is now the contents of the line in the file*/
@@ -60,16 +70,17 @@ int main(void)
 			if (file != EOF)
 			{
 				current = (struct data*)malloc(sizeof(struct data));
-					if (current)
-					{
-						current->station = (char*)malloc(sizeof(char)*(sizeof(temp_station)+1));
-						current->destination = (char*)malloc(sizeof(char)*(sizeof(temp_destination)+1));
-						strcpy(current->station, temp_station);
-						strcpy(current->destination, temp_destination);
-						current->departure = time_depature;
-						current->arrival = time_arrival;
-					}
+				if (current)
+				{
+					current->station = (char*)malloc(sizeof(char)*(sizeof(temp_station)+1));
+					current->destination = (char*)malloc(sizeof(char)*(sizeof(temp_destination)+1));
+					strcpy(current->station, temp_station);
+					strcpy(current->destination, temp_destination);
+					current->departure = convert_time(time_depature);
+					current->arrival = convert_time(time_arrival);
+					current->next=NULL;
 					append_node(&head, current);
+				}
 
 			}
 
