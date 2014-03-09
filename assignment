@@ -2,20 +2,83 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*A struct to hold the columns in the text file. We will have an array of structs*/
+struct train
+{
+	char start;
+	char destination;
+	int start_time;
+	int arrival_time;
+};
+
+void read_file(struct train *timetable)
+{
+	int i, j;
+	
+
+	/*allocates the memory location to the rows or the array of pointers to the columns*/
+	timetable->Data = (float **)malloc(sizeof(float *)*matrixY->rows);
+
+	/*allocates the memory location to the columns using a for loop*/
+	for (i = 0; i < matrixY->rows; i++)
+	{
+		matrixY->Data[i] = (float *)malloc(sizeof(float)*matrixY->col);
+	}
+
+	printf("Enter matrix data: \n");
+	for (i = 0; i < matrixY->rows; i++)
+	{
+		for (j = 0; j < matrixY->col; j++)
+		{
+			scanf("%f", &matrixY->Data[i][j]);
+		}
+	}
+}
+
+
 int main(void)
 {
-	char start[100],destination[100],arrival[100];
+	char start[100], destination[100], arrival[100];
+	int option;
+	struct train timetable;
+
+	/*Runs this loop until user want to exit*/
+	do
+	{
+		/*displays menu of options, either check trains or exit the program */
+
+		printf("\n 1 - Check trains \n 2 - Exit program \n");
+
+		printf(" \nOption: ");
+		scanf("%d", &option);
+		/* switch-case tree that calls a particular function/functions depending on user input*/
+		switch (option)
+		{
+		case 1:
+			read_file(&timetable);
+
+			printf("Please enter starting station: ");
+			scanf("%s", start);
+
+			printf("Please enter your destination: ");
+			scanf("%s", destination);
+
+			printf("Please enter your preferred time of arrival: ");
+			scanf("%s", arrival);
+
+			break;
+		case 2:
+			/*exits the program*/
+			printf("Exit program\n");
+			break;
 
 
-	printf("Please enter starting station");
-	scanf("%s",start);
+		default:
+			printf("Unknown option!\n\n");
+			break;
 
-	printf("Please enter your destination");
-	scanf("%s",destination);
-
-
-	printf("Please enter your preferred time of arrival ");
-	scanf("%s",arrival);
+		}
+	} while (option != 2);
 
 
 }
