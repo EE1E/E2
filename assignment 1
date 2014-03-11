@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*A struct to hold the columns in the text file. We will have an array of structs*/
+struct train
+{
+	char* start;
+	char* destination;
+	int start_time;
+	int arrival_time;
+};
+
+void read_file(struct train *timetable)
+{
+	int i=0, j, file, time_depature, time_arrival,rows=0;
+	char temp_station[20], temp_destination[20];
+	FILE* times;
+	struct train *train_array;
+
+
+
+	/*opens the times file */
+	times = fopen("c:\\times.txt", "r");
+	/*checks if we can open the file, otherwise output error message*/
+	if (times == NULL)
+	{
+		printf("Could not open times.txt for reading \n");
+	}
+	else
+	{
+		
+
+		do
+		{
+			/*Take in four elements from the file and measure how many rows there are in the file from dynamic allocation*/
+			file = fscanf(times, "%s %s %d %d", temp_station, temp_destination, &time_depature, &time_arrival);
+			rows++;
+			
+		} while (file != EOF);
+
+		/*allocates the memory location to the rows or the array of pointers to the columns*/
+		//strmat = (char **)malloc(sizeof(char*)* 1000);
+		
+		/*Array of structs using dynamic allocation*/
+		train_array = (struct train*)malloc(sizeof(struct train_array)*rows);
+
+		do
+		{
+			
+			/*Take in four elements from the file*/
+			file = fscanf(times, "%s %s %d %d", temp_station, temp_destination, &time_depature, &time_arrival);
+			/*makes sure does not go to the end of file*/
+			if (file != EOF)
+			{
+
+				//printf("%s %s %d %d \n", temp_station, temp_destination, time_depature, time_arrival);
+				/*set the string size to include the null terminator*/
+				
+				/*allocates the element in the array*/
+				train_array[i] = (struct train*)malloc(sizeof(struct person_array));
+				/*copies the string into the array*/
+				strcpy(train_array[i].start, temp_station);
+				i++;
+			}
+
+
+		} while (file != EOF);
+
+		/*closes the file*/
+		fclose(times);
+
+	}
+
+
+}
+
+
+int main(void)
+{
+	char start[100], destination[100], arrival[100];
+	int option;
+	struct train timetable;
+
+	/*Runs this loop until user want to exit*/
+	do
+	{
+		/*displays menu of options, either check trains or exit the program */
+
+		printf("\n 1 - Check trains \n 2 - Exit program \n");
+
+		printf(" \nOption: ");
+		scanf("%d", &option);
+		/* switch-case tree that calls a particular function/functions depending on user input*/
+		switch (option)
+		{
+		case 1:
+			read_file(&timetable);
+
+			printf("Please enter starting station: ");
+			scanf("%s", start);
+
+			printf("Please enter your destination: ");
+			scanf("%s", destination);
+
+			printf("Please enter your preferred time of arrival: ");
+			scanf("%s", arrival);
+
+			break;
+		case 2:
+			/*exits the program*/
+			printf("Exit program\n");
+			break;
+
+
+		default:
+			printf("Unknown option!\n\n");
+			break;
+
+		}
+	} while (option != 2);
+
+
+}
