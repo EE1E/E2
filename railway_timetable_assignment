@@ -24,12 +24,100 @@ struct data* append_node(struct data** head, struct data* node_pointer)
 	}
 	return node_pointer;
 }
-void display_list(struct data* head)
+void select_stations(struct data* head)
 {
+	int i=0,j=0,time, diff;
+	char temp_cmp[20], select_station[20], select_destination[20];
 	struct data* temp;
 
-	for(temp=head; temp!=NULL; temp=temp->next)
-		printf("Data element is %s %s %d %d\n", temp->station, temp->destination, temp->departure, temp->arrival);
+		for(temp=head; temp!=NULL; temp=temp->next)
+		{
+			if(strcmp(temp_cmp, temp->station)){
+			i++;
+			printf("%d %s\n", i, temp->station);
+			}
+
+			strcpy(temp_cmp, temp->station);
+		}
+		printf("Please select your departure station:\n");
+			do{
+				scanf("%d", &j);
+				if (j<1 || j>i)
+				printf("Unknown option! Please select your departure station:\n");
+
+			}while(j<1 || j>i);
+			i=1;
+			strcpy(temp_cmp, "");
+
+		for(temp=head; temp!=NULL; temp=temp->next)
+		{
+			if(strcmp(temp_cmp, temp->station)){
+				if (i==j){
+					strcpy(select_station,temp->station);
+					printf("Possible destinations from %s:\n",temp->station);
+				}
+
+				i++;
+			}
+			strcpy(temp_cmp, temp->station);
+		}
+		i=0;
+		strcpy(temp_cmp, "");
+		for(temp=head; temp!=NULL; temp=temp->next)
+		{
+			if (!strcmp(select_station, temp->station))
+			{
+				if(strcmp(temp_cmp, temp->destination))
+				{
+					i++;
+					printf("%d %s\n", i, temp->destination);
+				}
+
+			strcpy(temp_cmp, temp->destination);
+			}
+		}
+		printf("Please select your arrival station:\n");
+			do{
+				scanf("%d", &j);
+				if (j<1 || j>i)
+				printf("Unknown option! Please select your arrival station:\n");
+
+			}while(j<1 || j>i);
+			i=1;
+			strcpy(temp_cmp, "");
+
+		for(temp=head; temp!=NULL; temp=temp->next)
+		{
+			if (!strcmp(select_station, temp->station))
+			{
+				if(strcmp(temp_cmp, temp->destination))
+				{
+					if(i==j)
+					{
+						strcpy(select_destination, temp->destination);
+					}
+					i++;
+				}
+
+			strcpy(temp_cmp, temp->destination);
+			}
+		}
+		printf("Departure station: %s\nArrival station: %s\n", select_station, select_destination);
+		printf("Please enter desired time of arrival in hhmm (24-h) format:\n");
+		scanf("%d", &time);
+		printf("Suggested journey/s:\n");
+		for(temp=head; temp!=NULL; temp=temp->next){
+			if (!strcmp(select_station, temp->station) && !strcmp(select_destination, temp->destination))
+			{
+				if (convert_time(temp->arrival) - convert_time(time) < -120)
+					diff = (convert_time(temp->arrival) +(1440 - convert_time(time)));
+				else
+					diff = convert_time(temp->arrival) - convert_time(time);
+
+			if ((diff>=-120) && (diff<=0))
+				printf("\tDepart: %4d Arrive: %4d diff:%4d\n", temp->departure, temp->arrival, diff);
+			}
+		}
 
 }
 int convert_time(int raw_time)
@@ -50,7 +138,7 @@ int main(void)
 	struct data* head=NULL;
 	FILE* input;
 
-	input = fopen("y:\\times.txt", "r");
+	input = fopen("c:\\times.txt", "r");
 	if (input == NULL)
 	{
 		printf("Could not open dict.txt for reading \n");
@@ -58,7 +146,7 @@ int main(void)
 	else
 	{
 		/*allocates the memory location to the rows or the array of pointers to the columns*/
-
+		
 		do
 		{
 			/*temp_line is now the contents of the line in the file*/
@@ -70,17 +158,17 @@ int main(void)
 			if (file != EOF)
 			{
 				current = (struct data*)malloc(sizeof(struct data));
-				if (current)
-				{
-					current->station = (char*)malloc(sizeof(char)*(sizeof(temp_station)+1));
-					current->destination = (char*)malloc(sizeof(char)*(sizeof(temp_destination)+1));
-					strcpy(current->station, temp_station);
-					strcpy(current->destination, temp_destination);
-					current->departure = convert_time(time_depature);
-					current->arrival = convert_time(time_arrival);
-					current->next=NULL;
-					append_node(&head, current);
-				}
+					if (current)
+					{
+						current->station = (char*)malloc(sizeof(char)*(sizeof(temp_station)+1));
+						current->destination = (char*)malloc(sizeof(char)*(sizeof(temp_destination)+1));
+						strcpy(current->station, temp_station);
+						strcpy(current->destination, temp_destination);
+						current->departure = time_depature;
+						current->arrival = time_arrival;
+						current->next=NULL;
+						append_node(&head, current);
+					}
 
 			}
 
@@ -92,7 +180,7 @@ int main(void)
 
 	}
 
-	display_list(head);
+	select_stations(head);
 
 	return 0;
 }
