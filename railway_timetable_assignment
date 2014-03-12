@@ -26,7 +26,7 @@ struct data* append_node(struct data** head, struct data* node_pointer)
 }
 void select_stations(struct data* head)
 {
-	int i=0,j=0,time, diff;
+	int i=0,j=0,time, diff, journey_length;
 	char temp_cmp[20], select_station[20], select_destination[20];
 	struct data* temp;
 
@@ -114,8 +114,11 @@ void select_stations(struct data* head)
 				else
 					diff = convert_time(temp->arrival) - convert_time(time);
 
-			if ((diff>=-120) && (diff<=0))
-				printf("\tDepart: %4d Arrive: %4d diff:%4d\n", temp->departure, temp->arrival, diff);
+			if (1/*(diff>=-120) && (diff<=0)*/)
+			{
+				journey_length = mins_to_hours(convert_time(temp->arrival) - convert_time(temp->departure));
+				printf("\tDepart: %.4d Arrive: %.4d journey length: %.4d\n", temp->departure, temp->arrival, journey_length);
+			}
 			}
 		}
 
@@ -126,8 +129,14 @@ int convert_time(int raw_time)
 	int mins;
 
 	temp = raw_time;
-	mins = floor( temp /100)*60 + (temp/100 - floor(temp/100))*100;
+	mins = floor( temp /100)*60 + (temp - floor(temp/100)*100);
 	return mins;	
+}
+int mins_to_hours(int mins)
+{
+	int hours;
+	hours = floor((float)mins/60)*100 + (mins - floor((float)mins/60)*60);
+	return hours;
 }
 
 int main(void)
