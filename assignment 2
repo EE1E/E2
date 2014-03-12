@@ -13,7 +13,7 @@ struct train
 
 int read_file(int rows)
 {
-	int i = 0,  file, time_depature, time_arrival;
+	int i = 0, file, time_depature, time_arrival;
 	char temp_station[20], temp_destination[20];
 	FILE* times;
 	struct train *train_array;
@@ -29,7 +29,7 @@ int read_file(int rows)
 	}
 	else
 	{
-		
+
 		/*Array of structs using dynamic allocation*/
 		train_array = (struct train*)malloc(sizeof(struct train)*rows);
 		times = fopen("c:\\times.txt", "r");
@@ -70,16 +70,19 @@ void find_journeys(char* start, char* destination, char* arrival, struct train *
 	int i;
 	for (i = 0; i < (rows - 1); i++)
 	{
-		printf("%s %s %s\n", train_array[i].start, train_array[i].destination, train_array[i].start_time, train_array[i].arrival_time);
+		printf("%s %s %d %d\n", train_array[i].start, train_array[i].destination, train_array[i].start_time, train_array[i].arrival_time);
 	}
+
 
 }
 
 
 int main(void)
 {
+	int  time_depature, time_arrival;
+	char temp_station[20], temp_destination[20];
 	char start[20], destination[20], arrival[20], t1[20], t2[20];
-	int option, i, rows = 0, file, t3, t4;
+	int option, i = 0, rows = 0, file, t3, t4;
 	struct train *train_array;
 	FILE* times;
 
@@ -106,6 +109,52 @@ int main(void)
 		rows--;
 	}
 
+	/*opens the times file */
+	times = fopen("c:\\times.txt", "r");
+	/*checks if we can open the file, otherwise output error message*/
+	if (times == NULL)
+	{
+		printf("Could not open times.txt for reading \n");
+	}
+	else
+	{
+
+		/*Array of structs using dynamic allocation*/
+		train_array = (struct train*)malloc(sizeof(struct train)*rows);
+		times = fopen("c:\\times.txt", "r");
+		do
+		{
+
+			/*Take in four elements from the file*/
+			file = fscanf(times, "%s %s %d %d", temp_station, temp_destination, &time_depature, &time_arrival);
+			/*makes sure does not go to the end of file*/
+			if (file != EOF)
+			{
+
+				/*copies the string into the array*/
+				strcpy(train_array[i].start, temp_station);
+				strcpy(train_array[i].destination, temp_destination);
+				train_array[i].start_time = time_depature;
+				train_array[i].arrival_time = time_arrival;
+
+				i++;
+			}
+
+
+		} while (file != EOF);
+
+		for (i = 0; i < (rows - 1); i++)
+		{
+			printf("%s %s %d %d\n", train_array[i].start, train_array[i].destination, train_array[i].start_time, train_array[i].arrival_time);
+		}
+
+		/*closes the file*/
+		fclose(times);
+
+
+	}
+
+
 	/*Runs this loop until user want to exit*/
 	do
 	{
@@ -119,7 +168,7 @@ int main(void)
 		switch (option)
 		{
 		case 1:
-			train_array = read_file(rows);
+			//train_array = read_file(rows);
 			/*for (i = 0; i < (rows - 1); i++)
 			{
 			printf("%s %s %d %d \n", train_array[i].start, train_array[i].destination, train_array[i].start_time, train_array[i].arrival_time);
@@ -135,7 +184,7 @@ int main(void)
 			printf("Please enter your preferred time of arrival: ");
 			scanf("%s", arrival);
 
-			find_journeys(start, destination, arrival, &train_array, rows);
+			find_journeys(start, destination, arrival, train_array, rows);
 
 			break;
 		case 2:
