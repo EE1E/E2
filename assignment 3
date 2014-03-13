@@ -1,0 +1,155 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*A struct to hold the columns in the text file. We will have an array of structs*/
+struct train
+{
+	char start[100];
+	char destination[100];
+	int start_time;
+	int arrival_time;
+};
+
+struct train* read_file(int rows)
+{
+	int i = 0,  file, time_depature, time_arrival;
+	char temp_station[20], temp_destination[20];
+	FILE* times;
+	struct train *train_array;
+
+
+
+	/*opens the times file */
+	times = fopen("y:\\times.txt", "r");
+	/*checks if we can open the file, otherwise output error message*/
+	if (times == NULL)
+	{
+		printf("Could not open times.txt for reading \n");
+	}
+	else
+	{
+		
+		/*Array of structs using dynamic allocation*/
+		train_array = (struct train*)malloc(sizeof(struct train)*rows);
+		times = fopen("y:\\times.txt", "r");
+		do
+		{
+
+			/*Take in four elements from the file*/
+			file = fscanf(times, "%s %s %d %d", temp_station, temp_destination, &time_depature, &time_arrival);
+			/*makes sure does not go to the end of file*/
+			if (file != EOF)
+			{
+
+				/*copies the string into the array*/
+				strcpy(train_array[i].start, temp_station);
+				strcpy(train_array[i].destination, temp_destination);
+				train_array[i].start_time = time_depature;
+				train_array[i].arrival_time = time_arrival;
+
+				i++;
+			}
+
+
+		} while (file != EOF);
+
+
+		/*closes the file*/
+		fclose(times);
+
+		return train_array;
+	}
+
+
+}
+
+
+void find_journeys(char* start, char* destination, char* arrival, struct train* train_array, int rows)
+{
+	int i;
+	for (i = 0; i < (rows); i++)
+	{
+		printf("%s %s %d %d\n", train_array[i].start, train_array[i].destination, train_array[i].start_time, train_array[i].arrival_time);
+	}
+
+}
+
+
+int main(void)
+{
+	char start[20], destination[20], arrival[20], t1[20], t2[20];
+	int option, i, rows = 0, file, t3, t4;
+	struct train *train_array;
+	FILE* times;
+
+	/*opens the times file */
+	times = fopen("y:\\times.txt", "r");
+	/*checks if we can open the file, otherwise output error message*/
+	if (times == NULL)
+	{
+		printf("Could not open times.txt for reading \n");
+	}
+	else
+	{
+
+
+		do
+		{
+			/*Take in four elements from the file and measure how many rows there are in the file from dynamic allocation. due to EOF, an extra row is taken*/
+			file = fscanf(times, "%s %s %d %d", t1, t2, &t3, &t4);
+			rows++;
+
+		} while (file != EOF);
+		fclose(times);
+		/*reduces the number of rows by one, because an extra row was counted*/
+		rows--;
+	}
+
+	/*Runs this loop until user want to exit*/
+	do
+	{
+		/*displays menu of options, either check trains or exit the program */
+
+		printf("\n 1 - Check trains \n 2 - Exit program \n");
+
+		printf(" \nOption: ");
+		scanf("%d", &option);
+		/* switch-case tree that calls a particular function/functions depending on user input*/
+		switch (option)
+		{
+		case 1:
+			train_array = read_file(rows);
+			/*for (i = 0; i < (rows - 1); i++)
+			{
+			printf("%s %s %d %d \n", train_array[i].start, train_array[i].destination, train_array[i].start_time, train_array[i].arrival_time);
+			}*/
+
+
+			printf("Please enter starting station: ");
+			scanf("%s", start);
+
+			printf("Please enter your destination: ");
+			scanf("%s", destination);
+
+			printf("Please enter your preferred time of arrival: ");
+			scanf("%s", arrival);
+
+			find_journeys(start, destination, arrival, train_array, rows);
+
+			break;
+		case 2:
+			/*exits the program*/
+			printf("Exit program\n");
+			break;
+
+
+		default:
+			printf("Unknown option!\n\n");
+			break;
+
+		}
+	} while (option != 2);
+
+
+}
