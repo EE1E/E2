@@ -11,7 +11,7 @@ struct train
 	int arrival_time;
 };
 
-int read_file(int rows)
+struct train* read_file(int rows)
 {
 	int i = 0, file, time_depature, time_arrival;
 	char temp_station[20], temp_destination[20];
@@ -21,7 +21,7 @@ int read_file(int rows)
 
 
 	/*opens the times file */
-	times = fopen("c:\\times.txt", "r");
+	times = fopen("y:\\times.txt", "r");
 	/*checks if we can open the file, otherwise output error message*/
 	if (times == NULL)
 	{
@@ -32,7 +32,7 @@ int read_file(int rows)
 
 		/*Array of structs using dynamic allocation*/
 		train_array = (struct train*)malloc(sizeof(struct train)*rows);
-		times = fopen("c:\\times.txt", "r");
+		times = fopen("y:\\times.txt", "r");
 		do
 		{
 
@@ -87,7 +87,7 @@ int main(void)
 	FILE* times;
 
 	/*opens the times file */
-	times = fopen("c:\\times.txt", "r");
+	times = fopen("y:\\times.txt", "r");
 	/*checks if we can open the file, otherwise output error message*/
 	if (times == NULL)
 	{
@@ -110,7 +110,7 @@ int main(void)
 	}
 
 	/*opens the times file */
-	times = fopen("c:\\times.txt", "r");
+	times = fopen("y:\\times.txt", "r");
 	/*checks if we can open the file, otherwise output error message*/
 	if (times == NULL)
 	{
@@ -121,10 +121,10 @@ int main(void)
 
 		/*Array of structs using dynamic allocation*/
 		train_array = (struct train*)malloc(sizeof(struct train)*rows);
-		times = fopen("c:\\times.txt", "r");
+
 		do
 		{
-
+			
 			/*Take in four elements from the file*/
 			file = fscanf(times, "%s %s %d %d", temp_station, temp_destination, &time_depature, &time_arrival);
 			/*makes sure does not go to the end of file*/
@@ -143,10 +143,7 @@ int main(void)
 
 		} while (file != EOF);
 
-		for (i = 0; i < (rows - 1); i++)
-		{
-			printf("%s %s %d %d\n", train_array[i].start, train_array[i].destination, train_array[i].start_time, train_array[i].arrival_time);
-		}
+	
 
 		/*closes the file*/
 		fclose(times);
@@ -183,6 +180,7 @@ int main(void)
 
 			printf("Please enter your preferred time of arrival: ");
 			scanf("%s", arrival);
+			printf("\n\n");
 
 			find_journeys(start, destination, arrival, train_array, rows);
 
