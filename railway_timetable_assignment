@@ -26,7 +26,7 @@ struct data* append_node(struct data** head, struct data* node_pointer)
 	}
 	return node_pointer;
 }
-
+/* a function to convert time from hours and minutes into minutes*/
 int convert_time(int raw_time)
 {
 	float temp;
@@ -36,7 +36,7 @@ int convert_time(int raw_time)
 	mins = floor( temp /100)*60 + (temp - floor(temp/100)*100);
 	return mins;	
 }
-
+/* a function to convert time from minutes to hours and minutes*/
 int mins_to_hours(int mins)
 {
 	int hours;
@@ -148,13 +148,13 @@ void find_journey(struct data* head, char* departure_station, char* arrival_stat
 	struct data* temp_j;
 
 /* a do-while loop where user is asked to enter time of arrival and checks whether time entered is valid.
-	Time is unvalid if time<0, hours>23 or minutes>59 */
+	Time is invalid if time<0, hours>23 or minutes>59 */
 	do
 	{
 		printf("Please enter desired time of arrival in hhmm (24-h) format: ");
 		scanf("%d", &time);
 		if (time<0 || (int)floor( (float)time /100) > 23 || (time - (int)floor((float)time/100)*100 > 59))
-			printf("Unrecognised time!\n");
+			printf("Invalid time!\n");
 
 	}while (time<0 || (int)floor( (float)time /100) > 23 || (time - (int)floor((float)time/100)*100 > 59));
 	printf("Suggested journey/s:\n");
@@ -178,7 +178,7 @@ void find_journey(struct data* head, char* departure_station, char* arrival_stat
 		}
 	}
 /*****************************************  check for one change *********************************************/
-	/* Nested for loops that check for journes with one change.*/
+	/* Nested for loops that check for journeys with one change.*/
 	/* First for loop and if statement go through all lists and picks out enteries where destination station is matching to station selected by user 
 	and checks that corresponding departure station is NOT matching to station that user selected*/
 	for(temp_i=head; temp_i!=NULL; temp_i=temp_i->next)
