@@ -82,15 +82,15 @@ int time_duration(int t1, int t2)
 
 void find_journeys(char* start, char* destination, int arrival, struct train* train_array, int rows)
 {
-	int i, j, found=0;
-	
+	int i, j, found = 0;
+
 	for (i = 0; i < (rows); i++)
 	{
 		if ((strcmp(start, train_array[i].start) == 0) && (strcmp(destination, train_array[i].destination) == 0))
 		{
 			if ((time_duration(train_array[i].arrival_time, arrival) <= 120) && (time_duration(train_array[i].arrival_time, arrival)) >= 0)
 			{
-				printf("%d to %d, duration , no changes\n", train_array[i].start_time, train_array[i].arrival_time);
+				printf("%.4d to %.4d, duration , no changes\n", train_array[i].start_time, train_array[i].arrival_time);
 				found++;
 
 			}
@@ -101,18 +101,18 @@ void find_journeys(char* start, char* destination, int arrival, struct train* tr
 	/*for (i = 0; i < (rows); i++)
 	{
 
-		for (j = 0; j < (rows); i++)
-		{
-			if ((strcmp(start, train_array[j].start) == 0) && (strcmp(destination, train_array[j].destination) == 0))
-			{
-				if ((time_duration(train_array[j].arrival_time, arrival) <= 120) && (time_duration(train_array[j].arrival_time, arrival)) >= 0)
-					if ((time_duration(train_array[i].arrival_time, train_array[j].start_time) <= 60) && (time_duration(train_array[j].arrival_time, train_array[j].start_time)) >= 5)
-					{
-						printf("%d to %d, duration , change at %s \n", train_array[i].start_time, train_array[i].arrival_time, train_array[i].start);
-						found++;
-					}
-			}
-		}
+	for (j = 0; j < (rows); i++)
+	{
+	if ((strcmp(start, train_array[j].start) == 0) && (strcmp(destination, train_array[j].destination) == 0))
+	{
+	if ((time_duration(train_array[j].arrival_time, arrival) <= 120) && (time_duration(train_array[j].arrival_time, arrival)) >= 0)
+	if ((time_duration(train_array[i].arrival_time, train_array[j].start_time) <= 60) && (time_duration(train_array[j].arrival_time, train_array[j].start_time)) >= 5)
+	{
+	printf("%d to %d, duration , change at %s \n", train_array[i].start_time, train_array[i].arrival_time, train_array[i].start);
+	found++;
+	}
+	}
+	}
 	}*/
 	if (found == 0)
 		printf("No journeys found.");
