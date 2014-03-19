@@ -1,0 +1,264 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+
+struct data
+{
+	char* station;
+	char *destination;
+	int departure;
+	int arrival;
+	struct data *next;
+};
+/* a fuction to append node to a list*/
+struct data* append_node(struct data** head, struct data* node_pointer)
+{
+	struct data* temp;
+	/* if first node is last node, append to first node*/
+	if (*head == NULL)
+		*head = node_pointer;
+	else
+	{
+		/*traverse to last node, and append node to last node*/
+		for(temp=*head;temp->next!=NULL; temp=temp->next);
+		temp->next=node_pointer;
+	}
+	return node_pointer;
+}
+/* a function to convert time from hours and minutes into minutes*/
+int convert_time(int time)
+{
+	int mins;
+	mins = (int)floor( (float)time /100)*60 + (time - (int)floor((float)time/100)*100);
+	return mins;	
+}
+/* a function to convert time from minutes to hours and minutes*/
+int mins_to_hours(int mins)
+{
+	int hours;
+	hours = floor((float)mins/60)*100 + (mins - floor((float)mins/60)*60);
+	return hours;
+}
+
+int select_stations(struct data* head, char* select_station, char* select_destination)
+{
+	int i=0,j=0, found=0;
+	char **departure_stations, **arrival_stations;
+	struct data* temp;
+	
+	departure_stations = (char **)malloc(sizeof(char*)* 100);
+	arrival_stations = (char **)malloc(sizeof(char*)* 100);
+	for(i=0; i<100;i++)
+	{
+		departure_stations[i] = (char *)malloc(sizeof(char)*(strlen("")+1));
+		arrival_stations[i] = (char *)malloc(sizeof(char)*(strlen("")+1));
+		strcpy(departure_stations[i], "");
+		strcpy(arrival_stations[i], "");
+	}
+		/* a for loop that goes though all enteries in a timetable and prints out all unique departure stations once, assigning number to each station*/
+	for(temp=head; temp!=NULL; temp=temp->next)
+	{
+		found=0;
+		for(i=0; i<100;i++)
+		{
+			if (!strcmp(temp->station, departure_stations[i]))
+				found++;
+		}
+		if(found==0)
+		{
+			free(departure_stations[j]);
+			departure_stations[j] = (char *)malloc(sizeof(char)*(strlen(temp->station)+1));
+			strcpy(departure_stations[j], temp->station);
+			j++;
+			printf("%d %s\n", j, temp->station);
+		}
+	}
+			
+		/* a do while loop where user is asked to select departure station and invalid selections are rejected*/
+	printf("Enter \"0\" to exit\n");
+	do{
+		printf("Please select your departure station: ");
+		scanf("%d", &i);
+		if (i<0 || i>j)
+		printf("Unknown option! ");
+		if (i==0)
+			return 0;
+	}while(i<0 || i>j);
+
+	strcpy(select_station, departure_stations[i-1]);
+	j=0;	
+	for(temp=head; temp!=NULL; temp=temp->next)
+	{
+		if(!strcmp(select_station, temp->station))
+		{
+			found=0;
+			for(i=0; i<100;i++)
+			{
+				if (!strcmp(temp->destination, arrival_stations[i]))
+					found++;
+			}
+			if(found==0)
+			{
+				free(arrival_stations[j]);
+				arrival_stations[j] = (char *)malloc(sizeof(char)*(strlen(temp->destination)+1));
+				strcpy(arrival_stations[j], temp->destination);
+				j++;
+				printf("%d %s\n", j, temp->destination);
+			}
+		}
+	}
+	printf("Enter \"0\" to exit\n");
+	do{
+		printf("Please select your arrival station: ");
+		scanf("%d", &i);
+		if (i<0 || i>j)
+		printf("Unknown option! ");
+		if (i==0)
+			return 0;
+
+	}while(i<0 || i>j);
+	strcpy(select_destination, arrival_stations[i-1]);
+	for(i=0; i<100;i++)
+	{
+		free(departure_stations[i]);
+		free(arrival_stations[i]);
+	}
+	free(departure_stations);
+	free(arrival_stations);
+
+	printf("Departure station: %s\nArrival station: %s\n", select_station, select_destination);
+	return 1;
+}
+
+void find_journey(struct data* head, char* departure_station, char* arrival_station)
+{
+	int i=0, time, diff=0, journey_length, change_time, found=0;
+	char temp_cmp[20];
+	struct data* temp_i;
+	struct data* temp_j;
+
+/* a do-while loop where user is asked to enter time of arrival and checks whether time entered is valid.
+	Time is invalid if time<0, hours>23 or minutes>59 */
+	do
+	{
+		printf("Please enter desired time of arrival in hhmm (24-h) format: ");
+		scanf("%d", &time);
+		if (time<0 || (int)floor( (float)time /100) > 23 || (time - (int)floor((float)time/100)*100 > 59))
+			printf("Invalid time!\n");
+
+	}while (time<0 || (int)floor( (float)time /100) > 23 || (time - (int)floor((float)time/100)*100 > 59));
+	printf("Suggested journey/s:\n");
+
+	/* Nested for loops that check for journeys with no changes or one change.*/
+	/* First for loop and if statement go through all lists and picks out enteries where destination station is matching to station selected by user 
+	and checks that corresponding departure station is matching to station that user selected*/
+	for(temp_i=head; temp_i!=NULL; temp_i=temp_i->next)
+	{
+		/*checks if departure and arrival stations are in the same timetable entery*/
+		if (!strcmp(departure_station, temp_i->station) && !strcmp(arrival_station, temp_i->destination))
+		{
+			/*calculates difference in arrival time and time entered by user in minutes*/
+			diff = convert_time(temp_i->arrival) - convert_time(time);
+
+			if ((diff>-120) && (diff<=0))
+			{
+				/*calculates lenght of journey in hours and mintes (hhmm)*/
+				journey_length = mins_to_hours(convert_time(temp_i->arrival) - convert_time(temp_i->departure));
+				printf("\tDepart: %.4d Arrive: %.4d Journey length: %.4d, No changes\n", temp_i->departure, temp_i->arrival, journey_length);
+				found++;
+			}
+		}
+		if (!strcmp(temp_i->destination, arrival_station) && strcmp(temp_i->station, departure_station))
+		{
+			/*Second for loop and if statement go through all lists and and pick out enteries where station from first for loop corresponds to departure station*/
+			/* In other words, it checks wether change station is one of the destinations form departure station*/
+			for(temp_j=head; temp_j!=NULL; temp_j=temp_j->next)
+			{
+				if (!strcmp(temp_j->station, departure_station) && !strcmp(temp_i->station, temp_j->destination))
+				{
+					/*calculates difference in arrival time and time entered by user in minutes*/
+					diff = convert_time(temp_i->arrival) - convert_time(time);
+
+					/* calculates time requred for change in minutes*/
+					change_time = convert_time(temp_i->departure) - convert_time(temp_j->arrival);
+
+					/*calculates lenght of journey in hours and minutes (hhmm)*/
+					journey_length = mins_to_hours(convert_time(temp_i->arrival) - convert_time(temp_j->departure));
+
+					/* if difference in arrival time and time entered by user as well as time requred for change fit constraints written in specification,
+					prints out corrseponding journey*/
+					if ((diff>-120) && (diff<=0) && (change_time>=5 && change_time<=60))
+					{
+						printf("\tDepart: %.4d Arrive: %.4d Journey length: %.4d Change at: %s\n", temp_j->departure, temp_i->arrival, journey_length, temp_i->station);
+						found++;
+					}
+				}
+			}
+		}
+	}
+	/* Variable "found" is incremented by 1 every time a journey is found. If no journeys where found, "found" is equal to 0.*/
+	if (found == 0)
+		printf("\tNo journeys found.\n");
+}
+
+int main(void)
+{
+	int i, file, time_depature, time_arrival, test;
+	char temp_str, temp_station[20], temp_destination[20], select_station[20], select_destination[20];
+	struct data* current;
+	struct data* head=NULL;
+	FILE* input;
+
+	/*opens file with timetable*/
+	input = fopen("d:\\times.txt", "r");
+	if (input == NULL)
+	{
+		printf("Could not open times.txt for reading \n");
+	}
+	else
+	{
+		
+		do
+		{
+			/* reads in enteries from timetable into temporary variables*/
+			file = fscanf(input, "%s %s %d %d", temp_station, temp_destination, &time_depature, &time_arrival );
+			if (file != EOF)
+			{
+				/*allocates memory for a node*/
+				current = (struct data*)malloc(sizeof(struct data));
+					if (current)
+					{
+						/* allocates memory for strings in a node*/
+						current->station = (char*)malloc(sizeof(char)*(sizeof(temp_station)+1));
+						current->destination = (char*)malloc(sizeof(char)*(sizeof(temp_destination)+1));
+
+						/*writes data from temporary variables into corresponding structure variables*/
+						strcpy(current->station, temp_station);
+						strcpy(current->destination, temp_destination);
+						current->departure = time_depature;
+						current->arrival = time_arrival;
+						current->next = NULL;
+						/*call function to append node*/
+						append_node(&head, current);
+					}
+			}
+		} while (file != EOF);
+
+		/*closes the file*/
+		fclose(input);
+			/* infinite do-while loop which calls function to ask user for departure and arrival stations. 
+	And calls function to print out corresponding journeys repeatedly*/
+		do
+		{
+			test = select_stations(head, select_station, select_destination);
+			if (test != 0)
+				find_journey(head, select_station, select_destination);
+			printf("\n");
+		} while(test != 0);
+
+	}
+	// de-allocate
+
+	return 0;
+}
