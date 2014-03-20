@@ -26,6 +26,31 @@ struct data* append_node(struct data** head, struct data* node_pointer)
 	}
 	return node_pointer;
 }
+/* a function which goes though all nodes one by one de-allocating memory from each node*/
+struct data* deallocate_nodes(struct data **head)
+{
+	struct data *current;
+	struct data *delete_node;
+
+	/* do while loop runs until only "head" node is left*/
+	do
+	{	
+		current=*head;
+		delete_node = current->next;
+		current->next= delete_node->next;
+		/* de-allocate memory from strings*/
+		free(delete_node->station);
+		free(delete_node->destination);
+		/* de-allocate memory from the whole node which is currently being deleted*/
+		free(delete_node);
+
+	}while(current->next!=NULL);
+	/*de-allocate memory from "head" node*/
+		free(current->station);
+		free(current->destination);
+		free(current);
+}
+
 /* a function to convert time from hours and minutes into minutes*/
 int convert_time(int time)
 {
@@ -232,7 +257,7 @@ int main(void)
 	FILE* input;
 
 	/*opens file with timetable*/
-	input = fopen("c:\\times.txt", "r");
+	input = fopen("d:\\times.txt", "r");
 	if (input == NULL)
 	{
 		printf("Could not open times.txt for reading \n");
@@ -281,9 +306,9 @@ int main(void)
 				find_journey(head, select_station, select_destination);
 			printf("\n");
 		} while(test != 0);
+		deallocate_nodes(&head);
 
 	}
-	// de-allocate
 
 	return 0;
 }
