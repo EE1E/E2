@@ -31,11 +31,11 @@ struct data* deallocate_nodes(struct data **head)
 {
 	struct data *current;
 	struct data *delete_node;
-
+	
+	current	= *head;
 	/* do while loop runs until only "head" node is left*/
 	do
 	{	
-		current=*head;
 		delete_node = current->next;
 		current->next= delete_node->next;
 		/* de-allocate memory from strings*/
